@@ -1,6 +1,5 @@
 import pygame as pg
 import sys
-import time
 
 from Apple import Apple
 from Directions import Directions
@@ -41,7 +40,7 @@ class Game(object):
                 if event.type == pg.QUIT:
                     game_exit = True
                     sys.exit()
-                elif event.type == pg.K_ESCAPE:
+                if event.type == pg.K_ESCAPE:
                     pg.quit()
                     game_exit = True
                     sys.exit()
@@ -62,7 +61,6 @@ class Game(object):
                 snake.tail_extend()
                 self.score += 1
                 apple.generate(snake)
-                print(self.score)
 
             # Filling background with color (default white)
             self.screen.fill(self.white)
@@ -114,26 +112,72 @@ class Game(object):
         screen.blit(text, textpos)
 
     def game_over(self):
+        self.screen.fill(self.black)
         if self.online:
             pass
         else:
-            font = pg.font.SysFont(None, 72)
+            game_over_font = pg.font.SysFont(None, 100)
+            font = pg.font.SysFont(None, 64)
 
-            game_over_text = font.render("GAME OVER", 1, (255, 0, 0))
+            game_over_text = game_over_font.render("GAME OVER", 1, (255, 0, 0))
             game_over_width = game_over_text.get_width()
-            game_over_height = game_over_text.get_height()
 
             score_text = font.render("YOUR SCORE: " + str(self.score), 1, (255, 0, 0))
             score_width = score_text.get_width()
-            score_height = score_text.get_height()
 
-            self.screen.blit(game_over_text,
-                             (self.display_resolution[0]/2 - game_over_width/2,
-                              self.display_resolution[1]/2 - game_over_height/2))
-            self.screen.blit(score_text,
-                             (self.display_resolution[0]/2 - score_width/2,
-                              self.display_resolution[1]/2 - score_height/2 + game_over_height + 20))
-            pg.display.update()
-            time.sleep(2)
-            self.game_loop()
+            play_again_text = font.render("PLAY AGAIN?", 1, (255, 0, 0))
+            play_again_width = play_again_text.get_width()
+
+            yes_no_text = font.render("YES    NO", 1, (255,0 ,0 ))
+
+            play_again = True
+
+
+            while True:
+                if play_again:
+                    self.screen.fill(self.black)
+                    pg.draw.rect(self.screen, (255, 0, 0), (295, 445, 100, 50), 2)
+                else:
+                    self.screen.fill(self.black)
+                    pg.draw.rect(self.screen, (255, 0, 0), (418, 445, 100, 50), 2)
+                self.screen.blit(game_over_text,
+                                 (self.display_resolution[0] / 2 - game_over_width / 2,
+                                  100))
+                self.screen.blit(score_text,
+                                 (self.display_resolution[0] / 2 - score_width / 2,
+                                  200))
+                self.screen.blit(play_again_text,
+                                 (self.display_resolution[0] / 2 - play_again_width / 2,
+                                  self.display_resolution[1] - 250))
+                self.screen.blit(yes_no_text,
+                                 (300, 450))
+
+                pg.display.update()
+                self.clock.tick(self.fps)
+                pg.time.wait(0)
+
+                for event in pg.event.get():
+                    if event.type == pg.QUIT:
+                        game_exit = True
+                        sys.exit()
+                    if event.type == pg.K_ESCAPE:
+                        pg.quit()
+                        game_exit = True
+                        sys.exit()
+
+                    if event.type == pg.KEYDOWN:
+                        if event.key == pg.K_LEFT:
+                            play_again = True
+                            pg.display.update()
+                        if event.key == pg.K_RIGHT:
+                            play_again = False
+                            pg.display.update()
+                        if event.key == pg.K_RETURN:
+                            if play_again:
+                                self.game_loop()
+                            else:
+                                sys.exit()
+
+
+
 
