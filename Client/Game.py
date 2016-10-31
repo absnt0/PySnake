@@ -133,7 +133,7 @@ class Game(object):
             prompt_text = prompt_font.render("Enter your name...", 1, (255, 0, 0), self.black)
             prompt_width = prompt_text.get_width()
             name_saved = False
-            txt_box = external.eztext.Input(x=self.display_resolution[0]/2 - 250, y=370, maxlength=22,
+            txt_box = external.eztext.Input(x=self.display_resolution[0]/2 - 250, y=370, maxlength=20,
                                             color=(255, 0, 0), prompt='')
             while not name_saved:
                 self.screen.fill(self.black)
