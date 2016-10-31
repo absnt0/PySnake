@@ -18,7 +18,7 @@ class Menu(object):
         options_option_txt = menu_options_font.render("Options", 1, self.game.black)
         highscores_option_txt = menu_options_font.render("Highscores", 1, self.game.black)
         quit_option_txt = menu_options_font.render("Quit", 1, self.game.black)
-        online_txt = connection_font.render("Connected to server", 1, self.game.black)
+        online_txt = connection_font.render("Online mode", 1, self.game.black)
         offline_txt = connection_font.render("Offline mode", 1, self.game.black)
 
         game_title_width = game_title_txt.get_width()
@@ -108,12 +108,6 @@ class Menu(object):
 
     def options_menu(self):
         color_schemes = self.game.color_schemes
-        for x in color_schemes:
-            print(x)
-        self.game.snake_color = color_schemes[self.game.current_color_scheme]["snake_color"]
-        self.game.walls_color = color_schemes[self.game.current_color_scheme]["walls_color"]
-        self.game.apple_color = color_schemes[self.game.current_color_scheme]["apple_color"]
-        self.game.background_color = color_schemes[self.game.current_color_scheme]["background_color"]
 
         game_title_font = pg.font.SysFont(None, 100)
         option_font = pg.font.SysFont(None, 48)
@@ -138,6 +132,8 @@ class Menu(object):
 
             if current_option == 0:
                 pg.draw.rect(self.game.screen, (255, 0, 0), (40, 180, 720, 280), 2)
+                pg.draw.lines(self.game.screen, (255, 0, 0), 0, [[30,300],[5,320],[30,340]], 2)
+                pg.draw.lines(self.game.screen, (255, 0, 0), 0, [[770, 340], [795, 320], [770, 300]], 2)
             elif current_option == 1:
                 pg.draw.rect(self.game.screen, (255, 0, 0), (325, 485, 150, 65), 2)
 
