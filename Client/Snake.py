@@ -27,7 +27,6 @@ class Snake(object):
     def update(self, game):
         if self.check_collision():
             game.game_over()
-
         self.tail_follow()
         self.head.x += self.move_x
         self.head.y += self.move_y

@@ -12,7 +12,6 @@ class Apple(object):
         self.block_size = block_size
         self.coords = Coords()
 
-
     def generate(self, snake):
         generated = False
 

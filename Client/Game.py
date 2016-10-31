@@ -3,6 +3,7 @@ import sys
 
 from Apple import Apple
 from Directions import Directions
+from Menu import Menu
 from Snake import Snake
 
 
@@ -11,7 +12,7 @@ class Game(object):
     Game class is responsible for Game Logic and Drawing game elements on screen
     """
 
-    def __init__(self, display_resolution, screen, fps, clock, block_size, colors, online):
+    def __init__(self, display_resolution, screen, fps, clock, block_size, colors, color_schemes, online):
         self.display_resolution = display_resolution
         self.screen = screen
         self.fps = fps
@@ -20,10 +21,13 @@ class Game(object):
         self.online = online
         self.black = colors["black"]
         self.white = colors["white"]
-        self.snake_color = colors["snake_color"]
-        self.walls_color = colors["walls_color"]
-        self.apple_color = colors["apple_color"]
+        self.snake_color = color_schemes[0]["snake_color"]
+        self.walls_color = color_schemes[0]["walls_color"]
+        self.apple_color = color_schemes[0]["apple_color"]
+        self.background_color = color_schemes[0]["background_color"]
+        self.color_schemes = color_schemes
         self.score = 0
+        self.current_color_scheme = 0
 
     def game_loop(self):
         # Creating game objects
@@ -65,7 +69,7 @@ class Game(object):
             # Filling background with color (default white)
             self.screen.fill(self.white)
             self.show_score(self.screen, self.score)
-            self.screen.fill(self.black, (20, 20, self.display_resolution[0], self.display_resolution[1]))
+            self.screen.fill(self.background_color, (20, 20, self.display_resolution[0], self.display_resolution[1]))
 
             # Drawing snakes head
             pg.draw.rect(self.screen,
@@ -134,11 +138,10 @@ class Game(object):
 
 
             while True:
+                self.screen.fill(self.black)
                 if play_again:
-                    self.screen.fill(self.black)
                     pg.draw.rect(self.screen, (255, 0, 0), (295, 445, 100, 50), 2)
                 else:
-                    self.screen.fill(self.black)
                     pg.draw.rect(self.screen, (255, 0, 0), (418, 445, 100, 50), 2)
                 self.screen.blit(game_over_text,
                                  (self.display_resolution[0] / 2 - game_over_width / 2,
@@ -176,8 +179,5 @@ class Game(object):
                             if play_again:
                                 self.game_loop()
                             else:
-                                sys.exit()
-
-
-
-
+                                menu = Menu(self)
+                                menu.main_menu()
