@@ -45,8 +45,6 @@ class Menu(object):
             elif current_option == 3:
                 pg.draw.rect(self.game.screen, (255, 0, 0), (340, 400, 120, 65), 2)
 
-
-
             self.game.screen.blit(game_title_txt,
                              (self.game.display_resolution[0] / 2 - game_title_width / 2,
                               50))
@@ -71,7 +69,6 @@ class Menu(object):
                 self.game.screen.blit(offline_txt,
                                       (self.game.display_resolution[0] - offline_width,
                                        self.game.display_resolution[1] - offline_height))
-
 
             pg.display.update()
             self.game.clock.tick(self.game.fps)
