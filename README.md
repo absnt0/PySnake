@@ -4,6 +4,7 @@ Instructions:
 
 1. You need Python 3
 2. To run this you need also:
+  
    Django==1.10.2
    
    djangorestframework==3.5.1  
