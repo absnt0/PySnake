@@ -1,9 +1,12 @@
 import pygame as pg
 import sys
 
+import external.eztext
+
 from Apple import Apple
 from Directions import Directions
 from Menu import Menu
+from RESTClient import RESTClient
 from Snake import Snake
 
 
@@ -116,68 +119,101 @@ class Game(object):
         screen.blit(text, textpos)
 
     def game_over(self):
+        game_over_font = pg.font.SysFont(None, 100)
+        font = pg.font.SysFont(None, 64)
+        prompt_font = pg.font.SysFont(None, 40)
+
+        game_over_text = game_over_font.render("GAME OVER", 1, (255, 0, 0))
+        game_over_width = game_over_text.get_width()
+
         self.screen.fill(self.black)
+        txt_box = None
         if self.online:
-            pass
-        else:
-            game_over_font = pg.font.SysFont(None, 100)
-            font = pg.font.SysFont(None, 64)
-
-            game_over_text = game_over_font.render("GAME OVER", 1, (255, 0, 0))
-            game_over_width = game_over_text.get_width()
-
-            score_text = font.render("YOUR SCORE: " + str(self.score), 1, (255, 0, 0))
-            score_width = score_text.get_width()
-
-            play_again_text = font.render("PLAY AGAIN?", 1, (255, 0, 0))
-            play_again_width = play_again_text.get_width()
-
-            yes_no_text = font.render("YES    NO", 1, (255,0 ,0 ))
-
-            play_again = True
-
-
-            while True:
+            self.screen.fill(self.black)
+            prompt_text = prompt_font.render("Enter your name...", 1, (255, 0, 0), self.black)
+            prompt_width = prompt_text.get_width()
+            name_saved = False
+            txt_box = external.eztext.Input(x=self.display_resolution[0]/2 - 250, y=370, maxlength=22,
+                                            color=(255, 0, 0), prompt='')
+            while not name_saved:
                 self.screen.fill(self.black)
-                if play_again:
-                    pg.draw.rect(self.screen, (255, 0, 0), (295, 445, 100, 50), 2)
-                else:
-                    pg.draw.rect(self.screen, (255, 0, 0), (418, 445, 100, 50), 2)
+                pg.draw.rect(self.screen, (255, 0, 0), (100, 250, 600, 180), 2)
+                pg.draw.rect(self.screen, (100, 100, 100), (130, 360, 530, 40))
                 self.screen.blit(game_over_text,
                                  (self.display_resolution[0] / 2 - game_over_width / 2,
                                   100))
-                self.screen.blit(score_text,
-                                 (self.display_resolution[0] / 2 - score_width / 2,
-                                  200))
-                self.screen.blit(play_again_text,
-                                 (self.display_resolution[0] / 2 - play_again_width / 2,
-                                  self.display_resolution[1] - 250))
-                self.screen.blit(yes_no_text,
-                                 (300, 450))
+                self.screen.blit(prompt_text, (self.display_resolution[0]/2 - prompt_width/2, self.display_resolution[1]/2))
+                events = pg.event.get()
 
-                pg.display.update()
+                for event in events:
+                    if event.type == pg.QUIT:
+                        sys.exit()
+                    if event.type == pg.KEYDOWN:
+                        if event.key == pg.K_RETURN:
+                            rest_client = RESTClient("http://localhost", 8000)
+                            name = txt_box.value
+                            if name == "":
+                                name = "unknown_knight"
+                            rest_client.add_high_score(name, self.score)
+                            name_saved = True
+
+                txt_box.update(events)
+                txt_box.draw(self.screen)
                 self.clock.tick(self.fps)
                 pg.time.wait(0)
+                pg.display.update()
 
-                for event in pg.event.get():
-                    if event.type == pg.QUIT:
-                        game_exit = True
-                        sys.exit()
-                    if event.type == pg.K_ESCAPE:
-                        pg.quit()
-                        game_exit = True
-                        sys.exit()
+        score_text = font.render("YOUR SCORE: " + str(self.score), 1, (255, 0, 0))
+        score_width = score_text.get_width()
 
-                    if event.type == pg.KEYDOWN:
-                        if event.key == pg.K_LEFT:
-                            play_again = True
-                            pg.display.update()
-                        if event.key == pg.K_RIGHT:
-                            play_again = False
-                            pg.display.update()
-                        if event.key == pg.K_RETURN:
-                            if play_again:
-                                self.game_loop()
-                            else:
-                                menu = Menu(self)
-                                menu.main_menu()
+        play_again_text = font.render("PLAY AGAIN?", 1, (255, 0, 0))
+        play_again_width = play_again_text.get_width()
+
+        yes_no_text = font.render("YES    NO", 1, (255,0 ,0 ))
+
+        play_again = True
+
+        while True:
+            self.screen.fill(self.black)
+            if play_again:
+                pg.draw.rect(self.screen, (255, 0, 0), (295, 445, 100, 50), 2)
+            else:
+                pg.draw.rect(self.screen, (255, 0, 0), (418, 445, 100, 50), 2)
+            self.screen.blit(game_over_text,
+                             (self.display_resolution[0] / 2 - game_over_width / 2,
+                              100))
+            self.screen.blit(score_text,
+                             (self.display_resolution[0] / 2 - score_width / 2,
+                              200))
+            self.screen.blit(play_again_text,
+                             (self.display_resolution[0] / 2 - play_again_width / 2,
+                              self.display_resolution[1] - 250))
+            self.screen.blit(yes_no_text,
+                             (300, 450))
+
+            pg.display.update()
+            self.clock.tick(self.fps)
+            pg.time.wait(0)
+
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    game_exit = True
+                    sys.exit()
+                if event.type == pg.K_ESCAPE:
+                    pg.quit()
+                    game_exit = True
+                    sys.exit()
+
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_LEFT:
+                        play_again = True
+                        pg.display.update()
+                    if event.key == pg.K_RIGHT:
+                        play_again = False
+                        pg.display.update()
+                    if event.key == pg.K_RETURN:
+                        if play_again:
+                            self.game_loop()
+                        else:
+                            menu = Menu(self)
+                            menu.main_menu()
