@@ -120,7 +120,6 @@ class Menu(object):
         option_color_scheme_width = option_color_scheme_txt.get_width()
         option_back_width = option_back_txt.get_width()
 
-        menu_options = {0: "Color Scheme", 1: "Back"}
         current_option = 0
 
         while True:
@@ -188,6 +187,7 @@ class Menu(object):
                                 self.game.current_color_scheme -= 1
                     if event.key == pg.K_RETURN:
                        if current_option == 1:
+                           # Changing color scheme and returning back to main menu
                            self.game.snake_color = color_schemes[self.game.current_color_scheme]["snake_color"]
                            self.game.apple_color = color_schemes[self.game.current_color_scheme]["apple_color"]
                            self.game.walls_color = color_schemes[self.game.current_color_scheme]["walls_color"]
@@ -195,15 +195,18 @@ class Menu(object):
                            self.main_menu()
 
     def high_scores_menu(self):
+        # Font definitions
         game_title_font = pg.font.SysFont(None, 100)
         score_font = pg.font.SysFont(None, 32)
         back_font = pg.font.SysFont(None, 64)
 
+        # Rendering text with fonts (args: Text, Antyaliasing, Text Color)
         game_title_txt = game_title_font.render("PySnake", 1, (0, 255, 0))
         back_txt = back_font.render("Back", 1, self.game.black)
         offline_text = score_font.render("This option in unavailable in offline mode...", 1, self.game.black)
         no_scores_text = score_font.render("Nothing to show here...", 1, self.game.black)
 
+        # Saving text width
         game_title_width = game_title_txt.get_width()
         back_width = back_txt.get_width()
         offline_width = offline_text.get_width()
