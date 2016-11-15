@@ -128,7 +128,7 @@ class Game(object):
 
         self.screen.fill(self.black)
         txt_box = None
-        if self.online:
+        if self.online and self.score > 0:
             self.screen.fill(self.black)
             prompt_text = prompt_font.render("Enter your name...", 1, (255, 0, 0), self.black)
             prompt_width = prompt_text.get_width()

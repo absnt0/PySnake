@@ -21,8 +21,8 @@ class ColorSchemeList(APIView):
 class HighScoresList(APIView):
 
     def get(self, request):
-        high_scores = HighScore.objects.extra()
-        high_scores = high_scores.extra(order_by=['-score'])[:10]
+        high_scores = HighScore.objects.all()
+        high_scores = high_scores.order_by("-score")[:10]
         serializer = HighScoreSerializer(high_scores, many=True)
         return Response(serializer.data)
 
