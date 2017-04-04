@@ -19,3 +19,8 @@ Instructions:
 
 
 PS. Pygame has problems with catching keystrokes when running in virtualenv
+
+# Admin access to django panel:
+address: http://localhost:8000/admin
+login: admin
+password: verystrongpassword
